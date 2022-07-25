@@ -3,8 +3,9 @@ const router = express.Router();
 const bcrypt = require("bcrypt");
 const User = require("../../models/user");
 
-router.get("/", (req, res) => {
-  res.send("all users will be seen ehere");
+router.get("/", async (req, res) => {
+  const allUsers = await User.find({});
+  res.json(allUsers);
 });
 router.get("/:id", (req, res) => {
   try {

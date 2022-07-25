@@ -39,6 +39,6 @@ app.get("/", (req, res) => {
 //\\//\\//\\//\\//\\//
 //      Listener       \\
 //\\//\\//\\//\\//\\//
-app.listen(PORT, () => {
-  console.log("App listening on port: " + PORT);
+app.listen(PORT || 3000, () => {
+  console.log("App listening on port: " + PORT || 3000);
 });
