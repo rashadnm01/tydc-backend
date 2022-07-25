@@ -54,16 +54,24 @@ router.post("/signup", async (req, res) => {
 
 router.post("/login", async (req, res) => {
   try {
+    console.log("loggin in");
     const username = req.body.username;
     const password = req.body.password;
     const user = await User.findOne({ username });
 
     if (user) {
       const match = await bcrypt.compare(password, user.password);
-      res.status(200).send({ match });
+      console.log(user, match);
+      if (match) {
+        console.log("logged in");
+        res.json({ loggedIn: true });
+      } else {
+        res.json({ loggedIn: false });
+      }
     }
   } catch (err) {
-    res.send("Could not login: " + err);
+    console.log(err);
+    res.json({ err });
   }
 });
 
