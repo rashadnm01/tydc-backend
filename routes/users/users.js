@@ -34,6 +34,7 @@ router.put("/update", async (req, res) => {
 router.post("/signup", async (req, res) => {
   try {
     const exist = await User.findOne({ username: req.body.username });
+    console.log(exist);
     if (!exist) {
       const hashed = await bcrypt.hash(req.body.password, 10);
       const user = await User.create({
@@ -41,12 +42,13 @@ router.post("/signup", async (req, res) => {
         password: hashed,
         email: req.body.email,
       });
-      res.status(200).json(user);
+      res.send("User created");
     } else {
-      res.status(400).send("Please choose a different username!");
+      res.status(404).send("User already exists");
     }
   } catch (err) {
-    res.status(400).json({ err });
+    console.log(err);
+    res.json(err);
   }
 });
 
