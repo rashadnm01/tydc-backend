@@ -42,9 +42,11 @@ router.post("/signup", async (req, res) => {
         password: hashed,
         email: req.body.email,
       });
-      res.send("User created");
+      console.log("User created!");
+      res.status(200).send({ signedUp: true });
     } else {
-      res.status(404).send("User already exists");
+      console.log("user already exists");
+      res.status(404).send({ signedUp: false });
     }
   } catch (err) {
     console.log(err);
@@ -64,10 +66,14 @@ router.post("/login", async (req, res) => {
       console.log(user, match);
       if (match) {
         console.log("logged in");
-        res.json({ loggedIn: true });
+        res.status(200).json({ loggedIn: true });
       } else {
-        res.json({ loggedIn: false });
+        console.log("login failed");
+        res.status(400).json({ loggedIn: false });
       }
+    } else {
+      console.log("login failed");
+      res.status(400).json({ loggedIn: false });
     }
   } catch (err) {
     console.log(err);
