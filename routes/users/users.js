@@ -4,18 +4,27 @@ const bcrypt = require("bcrypt");
 const User = require("../../models/user");
 
 router.get("/", async (req, res) => {
-  const allUsers = await User.find({});
-  res.json(allUsers);
+  try {
+    const allUsers = await User.find({});
+    console.log(allUsers);
+    res.status(200).send(allUsers);
+  } catch (err) {
+    console.log(err);
+    res.status(404).send(err);
+  }
 });
-router.get("/:id", (req, res) => {
+
+router.get("/:id", async (req, res) => {
   try {
     const id = req.params.id;
-    const user = User.findById(id);
+    const user = await User.findById(id);
+    console.log(user);
     res.status(200).send(user);
   } catch (err) {
     res.status(404).send("You are unable to find user: " + err);
   }
 });
+
 router.post("/delete", async (req, res) => {
   try {
     await User.findOneAndDelete({ username: req.body.username });
@@ -25,7 +34,7 @@ router.post("/delete", async (req, res) => {
 });
 router.put("/update", async (req, res) => {
   try {
-    await User.findOneAndUpdate({ username: req.body, username }, req.body);
+    await User.findOneAndUpdate({ username: req.body.username }, req.body);
   } catch (err) {
     res.status(404).send(err);
   }
@@ -41,6 +50,9 @@ router.post("/signup", async (req, res) => {
         username: req.body.username,
         password: hashed,
         email: req.body.email,
+        firstName: req.body.firstName,
+        lastName: req.body.lastName,
+        lastLogin: Date.now(),
       });
       console.log("User created!");
       res.status(200).send({ signedUp: true });
