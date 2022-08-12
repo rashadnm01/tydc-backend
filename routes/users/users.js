@@ -25,6 +25,17 @@ router.get("/:id", async (req, res) => {
   }
 });
 
+router.get("/username/:username", async (req, res) => {
+  try {
+    const username = req.params.username;
+    const user = await User.findOne({ username: username });
+    console.log(user);
+    res.status(200).send({ userId: user._id });
+  } catch (err) {
+    res.status(404).send("You are unable to find user: " + err);
+  }
+});
+
 router.post("/delete", async (req, res) => {
   try {
     await User.findOneAndDelete({ username: req.body.username });
@@ -55,7 +66,7 @@ router.post("/signup", async (req, res) => {
         lastLogin: Date.now(),
       });
       console.log("User created!");
-      res.status(200).send({ signedUp: true });
+      res.status(200).send({ signedUp: true, userId: user._id });
     } else {
       console.log("user already exists");
       res.status(404).send({ signedUp: false });
@@ -78,7 +89,7 @@ router.post("/login", async (req, res) => {
       console.log(user, match);
       if (match) {
         console.log("logged in");
-        res.status(200).json({ loggedIn: true });
+        res.status(200).send({ loggedIn: true, userId: user._id });
       } else {
         console.log("login failed");
         res.status(400).json({ loggedIn: false });
